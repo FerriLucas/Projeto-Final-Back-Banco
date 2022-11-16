@@ -1,0 +1,56 @@
+show tables;
+create table pessoa(
+id int not null auto_increment,
+nome varchar(100) not null,
+cpf char(11) not null,
+idade int not null,
+primary key (id)
+);
+
+insert into pessoa (nome, cpf, idade) values ("Lucas","99988877766",28);
+
+/* Mostrar tabela por ordem de id */
+select * from pessoa;
+
+insert into pessoa (nome, cpf, idade) values ("Pedro","88877766655",29);
+insert into pessoa (nome, cpf, idade) values ("Bino","77766655544",30);
+insert into pessoa (nome, cpf, idade) values ("Ana","66655544433",18);
+insert into pessoa (nome, cpf, idade) values ("Maria","55544433322",16);
+insert into pessoa (nome, cpf, idade) values ("Leandro","44433322211",17);
+insert into pessoa (nome, cpf, idade) values ("Paulo","33322211100",19);
+insert into pessoa (nome, cpf, idade) values ("José","22211100099",20);
+insert into pessoa (nome, cpf, idade) values ("Amanda","11100099988",22);
+insert into pessoa (nome, cpf, idade) values ("Bianca","00099988877",16);
+insert into pessoa (nome, cpf, idade) values ("Thiago","00088877766",17);
+insert into pessoa (nome, cpf, idade) values ("Leandro","00077766655",18);
+insert into pessoa (nome, cpf, idade) values ("João","00066655544",25);
+insert into pessoa (nome, cpf, idade) values ("Xico","00055544433",30);
+insert into pessoa (nome, cpf, idade) values ("Joana","00044433322",31);
+insert into pessoa (nome, cpf, idade) values ("Gabi","00033322211",33);
+insert into pessoa (nome, cpf, idade) values ("Luciano","00022211199",40);
+insert into pessoa (nome, cpf, idade) values ("Joseph","00011199988",25);
+insert into pessoa (nome, cpf, idade) values ("Josefrida","00011122233",24);
+insert into pessoa (nome, cpf, idade) values ("Augusto","00022233344",28);
+
+alter table pessoa add column cidade varchar(100) not null;
+
+update pessoa set cidade = "Campo Grande" where id = 5;
+
+/* Ordernar a tabela pela idade */
+select * from pessoa order by idade desc;
+
+/* Mostrar apenas o id 1,2,8,18 */
+SELECT * FROM pessoa WHERE id IN (1,2,8,18);
+
+/* Mostrar o nome de quem for menor de idade */
+select nome from pessoa where idade < 30;
+
+/* Mostra as pessoas cujo o nome termina com O */
+select nome from pessoa where nome like '%o';
+
+/* "Mostra o nome de todos dentro de uma coluna" */
+select distinct cidade from pessoa; 
+
+/* Adicionar pessoas a tabela */
+insert into pessoa (nome, cpf, idade, cidade) values
+("","",,""),

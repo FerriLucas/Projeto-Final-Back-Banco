@@ -1,0 +1,151 @@
+describe departamento;
+
+create database DGT;
+use DGT;
+
+create table departamento(
+	id_dep int auto_increment not null,
+    nome_dep varchar(50) not null,
+    constraint primary key (id_dep)
+);
+
+show tables;
+describe departamento;
+
+create table cargo(
+	id_cargo int auto_increment not null,
+    nome_cargo varchar(50) not null,
+    id_dep int not null,
+    constraint primary key (id_cargo),
+    constraint foreign key(id_dep) references departamento(id_dep)
+);
+
+show tables;
+describe cargo;
+
+create table funcionario(
+	id_func int auto_increment not null,
+    cpf char(11) unique,
+    nome varchar(100) not null,
+    salario decimal(10,2) not null,
+    idade int,
+    cidade varchar(50),
+    id_dep int not null,
+    id_cargo int not null,
+    constraint primary key (id_func),
+    constraint foreign key (id_dep) references departamento(id_dep),
+    constraint foreign key (id_cargo) references cargo(id_cargo)
+);
+
+show tables;
+describe funcionario;
+
+create table dependente(
+	id_dependente int auto_increment not null,
+    certidao char(10) not null,
+    nome varchar(100) not null,
+    data_nascimento datetime,
+    local_nascimento varchar(100),
+    id_func int not null,
+    constraint primary key (id_dependente),
+    constraint foreign key (id_func) references funcionario(id_func)
+);
+
+show tables;
+
+insert into departamento (id_dep,nome_dep) values (default,"Administrativo"); /*Departamento 1*/
+
+select * from departamento;
+
+insert into departamento (id_dep,nome_dep) values (default,"Produção"); /*Departamento 2*/
+
+insert into departamento (nome_dep) value ("Financeiro"); /*Departamento 3*/
+
+insert into departamento (nome_dep) value ("Pessoal"); /*Departamento 4*/
+
+insert into departamento (nome_dep) value ("Comercial"); /*Departamento 5*/
+
+insert into departamento (nome_dep) value ("Vendas"); /*Departamento 6*/
+
+insert into departamento (nome_dep) value ("Tecnologia da Indormação"); /*Departamento 7*/
+
+insert into departamento (nome_dep) value ("Diretoria"); /*Departamento 8*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Analista de Controle e Logística",1); /*Cargo 1*/
+
+select * from cargo;
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Tesoureiro",3); /*Cargo 2*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Conferente",2); /*Cargo 3*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Supervisor",2); /*Cargo 4*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Gestão de Pessoas",4); /*Cargo 5*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Vendedor",6); /*Cargo 6*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Gerente",6); /*Cargo 7*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Desenvolvedor",7); /*Cargo 8*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Analista de TI",7); /*Cargo 9*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Eng. de Software",7); /*Cargo 10*/
+
+insert into cargo (id_cargo,nome_cargo,id_dep) value (default,"Diretor",7); /*Cargo 11*/
+
+describe funcionario;
+
+insert into funcionario (id_func,cpf,nome,salario,idade,cidade,id_dep,id_cargo)
+values (default,"02102202324","João da Silva",1800,18,"Campo Grande",2,3);
+
+insert into funcionario values (default,"02102202323","Tadeu da Silva",1800,18,"Campo Grande",2,3);
+
+select * from funcionario;
+
+insert into funcionario values (default,"02102202322","Lucas da Silva",1800,28,"Campo Grande",8,7);
+
+insert into funcionario values (default,"02102202321","Maria da Silva",1800,38,"Campo Grande",6,6);
+
+describe dependente;
+
+insert into funcionario values (default,"02102202329","José Siqueira",1800,38,"Campo Grande",6,6);
+
+insert into dependente value (default,"444555","Maria Siqueira","2004-07-14 00:00:00","Campo Grande",5);
+
+select * from dependente;
+
+select nome from funcionario where id_func = 4; /* exibir o nome do funcionario id = 4 */
+
+update funcionario set salario = 2500 where id_func = 3; /* alterar o salario do funcionario id = 3 */
+
+update funcionario set nome = "Sebastião da Silva" where id_func = 1;  /* alterar o nome do funcionario id = 1 */
+
+insert into funcionario values (default,"02102202379","Bino Siqueira",1800,18,"Sao Paulo",1,8);
+insert into funcionario values (default,"02102202389","Bill Siqueira",1800,28,"Rio de Janeiro",2,7);
+insert into funcionario values (default,"02102202319","A da Silva",1800,38,"Curitiba",3,6);
+insert into funcionario values (default,"02102202339","B da Silva",1800,48,"Porto Alegre",4,5);
+insert into funcionario values (default,"02102202349","C da Silva",1800,58,"Cuiaba",5,4);
+insert into funcionario values (default,"02102202359","D da Silva",1800,68,"Santa Catarina",6,3);
+insert into funcionario values (default,"02102202369","E da Silva",1800,78,"Terenos",7,2);
+insert into funcionario values (default,"02102202399","F da Silva",1800,88,"Rio Verde",8,1);
+
+/*
+Show   = Exibir
+Insert = Inserir
+Update = Alterar
+Select = Selecionar
+Delete = Remove o valor (Apenas um dado)
+Drop   = Remove tudo
+*/
+
+/* Adicionando dependente aos funcionarios */
+insert into dependente values (default,"444666","Boneco01","2005-08-15 00:00:00","São Paulo","6");
+insert into dependente values (default,"444777","Boneco02","2003-09-16 00:00:00","Rio de Janeiro","8");
+insert into dependente values (default,"444888","Boneco03","2002-10-17 00:00:00","Curitiba","10");
+insert into dependente values (default,"444999","Boneco04","2001-11-18 00:00:00","São Gabriel do Oeste","13");
+insert into dependente values (default,"444444","Boneco00","2000-12-20 00:00:00","Campo Grande","5");
+
+/* exibir o nome da tabela funcionario e o nome dos respectivos depententes destes funcionarios */
+select funcionario.nome,dependente.nome from funcionario inner join dependente on funcionario.id_func = dependente.id_func;

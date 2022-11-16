@@ -1,0 +1,294 @@
+#################### CRIANDO SEU SERVIDOR LAMP ########################
+
+ATUALIZAR OS PACOTES DO SISTEMA
+
+sudo apt-get update
+
+
+#############################################
+
+VERIFICAR IP DO SERVIDOR
+
+PASSO 1 - COMANDO IP ADDRESS
+
+ip a
+
+PASSO 2 - sudo apt-get install net-tools
+
+PASSO 3 - ifconfig
+
+
+#############################################
+NAVEGAR NOS DIRETÓRIOS
+
+pwd
+
+cd ..
+cd ./
+cd /var/www/
+
+#############################################
+CRIAR DIRETÓRIOS MKDIR
+
+PASSO 1 -
+mkdir nome_da_pasta
+
+
+PASSO 2 - VERIFICAR PERMISSÕES DO DIRETÓRIO
+
+ls -l
+
+
+#############################################
+MUDAR AS PERMISSÕES DO DIRETÓRIO /VAR/WWW
+
+CHMOD 777 vendas/* -Rf
+
+#############################################
+CRIAR USUÁRIOS PARA ACESSO AO FTP
+
+sudo adduser joao 
+
+#############################################
+INSTALAÇÃO DO SERVIDOR WEB APACHE2
+
+PASSO 1: sudo apt-get update
+
+install apache2
+
+PASSO 2:  cd /tmp
+
+PASSO 3:  wget http://127.0.0.1
+
+Verificar se o serviço está rodando:
+
+sudo systemctl status apache2.service
+
+#############################################
+INSTALAÇÃO DO SERVIDOR PHP
+
+PASSO 1:  sudo apt install php
+
+PASSO 2: verificar a versao do php
+php -v
+
+PASSO 3: restartar o serviço apache
+
+sudo systemctl status apache2.service
+
+#############################################
+INSTALAR O BANCO DE DADOS
+
+PASSO 1: instalar o servidor de banco de dados
+
+sudo apt install mysql-server
+
+PASSO 2: fazer login no banco de dados
+
+sudo mysql -p
+
+show databases;
+
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password by '$uP0rT3@22';
+
+CREATE USER 'devweb'@'%' IDENTIFIED BY 'suporte@22';
+GRANT ALL PRIVILEGES ON *.* TO 'devweb'@'%';
+FLUSH PRIVILEGES; 
+
+PASSO 3: realizar o teste e tentar logar como root novamente
+sudo mysql -p
+sudo mysql -u root -p
+
+PASSO 4: realizar configuração de segurança do MySQL
+sudo -s
+
+mysql_secure_installation
+
+inserir a senha do root: $uP0rT3@22
+
+validate password component?  N
+change the root password? N
+
+remove anonymous users? Y
+
+disallow root login remotely? Y
+
+remove test database and access to it? Y
+
+Reload privilege tables now? Y
+
+All done!
+para testar novamente se as configurações estão corretas execute o comando:
+mysql -uroot -p
+
+#############################################
+LIBERAR ACESSO EXTERNO AO SERVIDOR DE BANCO DE DADOS
+
+PASSO 1 - acessar o arquivo de configuração
+
+cd /etc/mysql/mysql.conf.d/
+
+ls
+pwd
+PASSO 2 - fazer o backup do arquivo de configuração
+
+sudo cp mysqld.cnf mysqld.cnf.bkp
+
+PASSO 3 - acessar o arquivo para teste
+
+sudo nano mysqld.cnf.bkp
+
+Liberando acesso externo ao MySQL
+Se estiver logado como root, você pode remover o sudo dos comandos abaixo.
+Primeiro edite o arquivo de configuração do MySQL, geralmente ele se chama my.cnf
+
+Agora procure a linha de Bind IP
+bind-address 127.0.0.1 “Troque 127.0.0.1 por 0.0.0.0”
+bind-address 0.0.0.0
+
+control + O para salvar
+control + X para sair
+
+Salve o arquivo e reinicie o servidor MySQL
+$ sudo service mysql restart
+
+#############################################
+CRIAR SEU PRIMEIRO SCRIPT PHP
+
+PASSO 1: acessar o /var/www
+
+PASSO 2: criar com o nano o arquivo info.php
+
+sudo nano info.php
+
+PASSO 3: escrever o seguinte script
+
+<?php
+
+phpinfo();
+
+?>
+
+<?php
+
+echo "Olá Mundo";
+
+?>
+
+#############################################
+MUDAR A PASTA PADRAO DO APACHE
+
+sudo nano /etc/apache2/sites-available/000-default.conf
+
+Document Root /var/www
+
+sudo systemctl restart apache2.service
+
+sudo chown nobody:nogroup /var/www
+sudo chown joao:joao /var/www
+
+sudo chgrp -R www-data /var/www
+sudo chmod -R 775 /var/www
+
+ls -l /var/www
+
+#############################################
+INSTALAR O SERVIÇO DE ACESSO REMOTO AO SERVER - SSH
+
+Passo 1 - 
+sudo apt-get install openssh-server
+
+Passo 2 - fazer o backup
+
+sudo cp sshd_conf sshd_conf.bkp
+
+PASSO 3 - acessar o arquivo de configuração para teste
+
+sudo nano /etc/ssh/sshd_conf
+
+PasswordAuthentication yes
+PermitEmptyPasswords no
+ChallengeResponseAuthentication yes
+AllowUsers suporte #Recomendado
+
+PuTTY é um cliente SSH e telnet, desenvolvido originalmente por Simon Tatham para a plataforma Windows. 
+PuTTY é um software de código aberto que está disponível com código-fonte e é desenvolvido e apoiado por um grupo de voluntários.
+https://www.putty.org
+
+#############################################
+HABILITAR O FIREWALL NO LINUX
+
+PASSO 1-
+sudo ufw enable
+
+PASSO 2- verificar o status do serviço
+
+sudo ufw status
+
+PASSO 3- adicionar portas para acesso ao servidor de FTP
+
+sudo ufw allow 20/tcp
+
+sudo ufw allow 21/tcp
+
+sudo ufw allow 900/tcp
+
+sudo ufw deny 56/tcp from 192.168.x.x
+
+
+
+#############################################
+INSTALAR O SERVIÇO DE ACESSO AO FTP
+
+Passo 1 - 
+
+sudo apt install proftpd
+
+Passo 2 - Backupp do arquivo de configuração
+cp proftpd.conf proftpd.conf.bkp
+
+Passo 3 - verificar status
+
+/etc/init.d/proftpd status
+/etc/init.d/proftpd start
+/etc/init.d/proftpd stop
+/etc/init.d/proftpd restart
+
+Passo 3 - editar o arquivo de configuração
+
+sudo nano /etc/proftpd/proftpd.conf
+
+UseIPv6 off
+ServerName  "FTP SERVER"
+#DefaultRoot ~
+
+Mudar o #DefaultRoot para  /var/www
+AllowOverwrite on
+MaxClientes 10
+
+PASSO 4- mudar o proprietário do /var/www
+
+sudo chown user:user /var/www -R
+
+PASSO 4- Alterar o diretório /home do usuário 
+
+nano/etc/passwd
+webmaster:x:1055:1055:Webaster:/var/www/html:/bin/bash
+
+#############################################
+PRINCIPAIS PORTAS e PROTOCOLOS DE REDE:
+
+21 --> FTP
+22 --> SSH
+80 --> HTTP
+443 --> HTTPS
+53 --> DNS
+110 --> POP3
+143 --> IMAP
+25 --> SMTP
+465 --> SMTPS SSL
+587 --> SMTP TLS
+993 --> IMAPS 
+995 --> POP3 SSL/TLS
+3306 --> MySQL
+3389 --> RDP
